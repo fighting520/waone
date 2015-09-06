@@ -1,0 +1,229 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <div class="main-title">
+        <h2>{$meta_title}</h2>
+        	<link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+<php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+<link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    </div>
+    <form action="{:U('save')}" method="post" class="form-horizontal">
+    
+       <input type="hidden" class="text " name="id" value="{$info.id}"/>
+    
+        <div class="form-item">
+            <label class="item-label">广告标题<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="title" value="{$info.title}">
+            </div>
+        </div>
+        
+         <div class="form-item">
+            <label class="item-label">广告图片<span class="check-tips">(宽540px、高360px,png、jpg格式)</span></label>
+            <div class="controls">
+                    {:hook('UploadImages', array('name'=>'cover_url','value'=>$info['cover_url'],'buttonText'=>'上传图片','selectMultiple'=>'true'))}
+            </div>
+        </div>
+        
+     <div class="form-item">
+		<label class="item-label">发布日期<span class="check-tips"></span></label>
+		<div class="controls">
+			<input type="text"
+							name="create_time" class="text time"
+							value="{$info['create_time']|time_format}"
+							placeholder="请选择日期" />
+		</div>
+	</div>
+	
+	<div class="form-item">
+		<label class="item-label">状态<span class="check-tips"></span></label>
+		
+		<div class="controls">
+		
+		<if condition="$info.status eq '' ">
+			<label class="radio"><input
+				type="radio" name="status" value="1"
+			 checked> 上线 </label>
+				<label class="radio"><input
+				type="radio" name="status" value="3"
+			> 草稿 </label>
+			
+		
+    <else /> <volist name=":parse_dict_attr('oc_status')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="status" value="{$vo.value}"
+			<eq name="info.status" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+</if>
+		
+			
+		
+		</div>
+	</div>
+        
+        
+        
+        
+    <div class="form-item">
+		<label class="item-label">广告类型<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_adtype')" id="vo"> 
+			<label class="radio"><input  onclick="divClick();"
+				type="radio" name="adtype" value="{$vo.value}"
+			<eq name="info.adtype" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	<script type="text/javascript">  
+	$(function(){
+		var adtype = {$info.adtype};
+		 $(".app_ai").hide();
+		
+	 switch (adtype){  
+         case 1:   
+        	 $(".app_1").show(); 
+             break;  
+         case  2: 
+        	
+        	 $(".app_2").show();
+        	
+             break;
+         case 3:     
+        	 $(".app_3").show();
+             break;
+         case  4:     
+        	 $(".app_2").show(); 
+             break; 
+          default:
+        	  break;
+             
+     }  
+		
+	});
+    function divClick(){  
+  
+       var show="";  
+       var apm = document.getElementsByName("adtype");  
+       for(var i=0;i<apm.length;i++){  
+       if(apm[i].checked)  
+        show = apm[i].value;  
+       }  
+       
+       
+
+       $(".app_ai").hide();
+  	 switch (show){  
+           case  '1':   
+        	   $(".app_1").show();  
+               break;  
+           case  '2':     
+        	   $(".app_2").show();
+               break;
+           case  '3':     
+        	   $(".app_3").show();
+               break;
+           case  '4':     
+        	   $(".app_2").show();
+               break;    
+               
+       }   
+}  
+</script> 
+
+
+<div class="app_1 app_ai">
+   <div class="control-group">
+            <label class="item-label">价格:<span class="check-tips">（如果没有折扣价，现价和原价可填写一样）</span></label>
+            <div class="controls">
+           
+              <input type="text"  class="text input-small " placeholder="现价"    value="{$info.price}" name="price">&nbsp;
+              <input type="text"  class="text  input-small" placeholder="原价"    value="{$info.yprice}" name="yprice">&nbsp;
+               <input type="text"  class="text  input-small" placeholder="佣金"    value="{$info.commission}" name="commission">&nbsp;
+             </div>
+  </div>
+  
+  
+  <div class="control-group">
+            <label class="item-label" >购买链接:<span class="check-tips">（为方便不用平台的数据统计，请分别填写安卓、TV、IOS的购买链接）</span></label>
+            <div class="controls">
+              <input type="text"  class="text input-large" placeholder="安卓购买链接"    value="{$info.androidlink}" name="androidlink">&nbsp;
+              
+           </div>
+           <div class="controls">
+             
+               <input type="text"  class="text input-large" placeholder="TV购买链接"    value="{$info.gmlink}" name="gmlink">&nbsp;
+
+           </div>
+           <div class="controls">
+          
+               <input type="text"  class="text input-large" placeholder="IOS购买链接"    value="{$info.ioslink}" name="ioslink">&nbsp;
+           </div>
+  </div>
+</div>
+
+
+
+<div class="app_2 app_ai">
+ 
+         <div class="form-item">
+            <label class="item-label">广告链接<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="link" value="{$info.link|default=''}">
+            </div>
+        </div>
+</div>	
+
+
+<div class="app_3 app_ai">
+ 
+         <div class="control-group">
+            <label class="item-label" >下载链接:<span class="check-tips"></span></label>
+            <div class="controls">
+              <input type="text"  class="text input-large" placeholder="安卓下载链接"    value="{$info.androiddown}" name="androiddown">&nbsp;
+              
+           </div>
+           <div class="controls">
+             
+               <input type="text"  class="text input-large" placeholder="ios下载链接"    value="{$info.iosdown}" name="iosdown">&nbsp;
+
+           </div>
+          
+       </div>
+</div>	
+	
+        
+        
+       
+        
+	 
+	
+	
+	
+        
+        
+        <div class="form-item">
+            <input type="hidden" name="id" value="{$info.id|default=''}">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定
+            </button>
+            <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+        </div>
+    </form>
+</block>
+<block name="script">
+    <script type="text/javascript" charset="utf-8">
+    
+    $('.time').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        language:"zh-CN",
+        todayBtn: true,
+        minView:2,
+        autoclose:true
+    });
+    
+        //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script>
+</block>

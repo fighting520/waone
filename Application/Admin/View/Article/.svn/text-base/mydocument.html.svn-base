@@ -1,0 +1,225 @@
+<extend name="Public/base"/>
+
+<!-- 子导航 -->
+<block name="sidebar">
+    <include file="sidemenu" />
+</block>
+
+
+<block name="body">
+	<!-- 标题 -->
+	<div class="main-title">
+		<h2>
+		<if condition="$status eq 1">
+		已上线文档({$_total})
+		<elseif condition="$status eq 2"/>待审核文档({$_total})
+		<else />所有文档({$_total})
+       </if>
+		</h2>
+	</div>
+
+	<!-- 按钮工具栏 -->
+	<div class="cf">
+		<div class="fl">
+		
+		<div class="btn-group">
+				
+					<button class="btn document_add" <if condition="count($cate) eq 1">url="{:U('article/add',array('cate_id'=>$cate[0],'pid'=>I('pid',0),'model_id'=>$cate[0],'group_id'=>$group_id))}"</if>>新 增
+						<if condition="count($cate) gt 1"><i class="btn-arrowdown"></i></if>
+					</button>
+					<if condition="count($cate) gt 1">
+					 <ul class="dropdown nav-list">
+						<volist name="cate" id="vo">
+						<li><a href="{:U('article/add',array('cate_id'=>$vo,'model_id'=>$vo,'pid'=>I('pid',0),'group_id'=>$group_id))}">{$vo|get_document_model='title'}</a></li>
+						</volist>
+					   </ul>
+					</if>
+				
+			</div>
+		
+		
+		<!--  
+            <button class="btn ajax-post" target-form="ids" url="{:U("Article/setStatus",array("status"=>1))}">启 用</button>
+			<button class="btn ajax-post" target-form="ids" url="{:U("Article/setStatus",array("status"=>0))}">禁 用</button>
+		-->	
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/setStatus",array("status"=>-1))}">删 除</button>
+		</div>
+		
+		
+		
+
+		<!-- 高级搜索 -->
+		<div class="search-form fr cf">
+		
+		   <div class="shref">
+			<a href="{:U('article/mydocument')}">所有（{$info.document_my}） </a>&nbsp;
+			
+			<a href="{:U('article/mydocument?status=1')}">已上线（{$info.document_pass}） </a>&nbsp;
+			
+			<a href="{:U('article/mydocument?status=2')}" style='color: #ff2610' ">待审核（{$info.document_wait}）</a>&nbsp;
+		</div>
+		
+			<div class="sleft">
+				
+				<input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入标题文档">
+				<a class="sch-btn" href="javascript:;" id="search" url="{:U('article/mydocument','pid='.I('pid',0).'&cate_id='.$cate_id,false)}"><i class="btn-search"></i></a>
+			</div>
+            
+		</div>
+	</div>
+
+
+	<!-- 数据表格 -->
+    <div class="data-table">
+		<table class="">
+    <thead>
+        <tr>
+		<th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+		<th class="">编号</th>
+		
+		<th class="">标题</th>
+		
+		<th class="">栏目</th>
+		<th class="">状态</th>
+		<th class="">发布时间</th>
+		<th class="">浏览量</th>
+		<th class="">点赞量</th>
+		<th class="" width="8%">预览</th>
+		<th class="">操作</th>
+		</tr>
+    </thead>
+    <tbody>
+		<volist name="list" id="vo">
+		<tr>
+            <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+			<td>{$vo.id} </td>
+			
+			<td> 
+		
+			 <if condition="($show_examine eq 1) or ($vo.status neq '正常' )">   
+			<a href="{:U('Article/edit?cate_id='.$vo['category_id'].'&id='.$vo['id'])}">{$vo.title}</a>
+<else /> {$vo.title}
+</if>
+			
+			
+			</td>
+			
+			<td><span>{:get_cate($vo['category_id'])}</span></td>
+			<td>{$vo.status}</td>
+			<td><span>{$vo.create_time}</span></td>
+			
+			<td>{$vo.view}</td>
+			<td>{$vo.zits}</td>
+			
+			<td > <a href="http://119.29.65.240:8890/wawa/app/view.html#0-{$vo.id}" target="_blank">手机</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="http://119.29.65.240:8890/wawa/tv/content.html#{$vo.id}" target="_blank">TV</a></td>
+			<td>
+			
+			 <if condition="$vo.status neq '正常'" >
+			<a href="{:U('Article/edit?cate_id='.$vo['category_id'].'&id='.$vo['id'])}">编辑</a>
+			</if>
+			
+			 <if condition="$vo.status eq '正常'" >
+			 <a href="{:U('Article/setStatus?status=3&ids='.$vo['id'])}" class="confirm ajax-get">撤回草稿</a>
+			</if>
+			
+			
+			<eq name="show_examine" value="1">
+			    <if condition="$vo.status eq '正常'" >
+				   <a href="{:U('Article/setStatus?status=0&ids='.$vo['id'])}" class="confirm ajax-get">禁用</a>
+				<elseif condition="$vo.status eq '禁用'"/>
+				    <a href="{:U('Article/setStatus?status=1&ids='.$vo['id'])}" class="confirm ajax-get">启用</a>
+				
+				</if>
+			</eq>	
+				
+				
+				
+				<a href="{:U('Article/setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">删除</a>
+                </td>
+		</tr>
+		</volist>
+	</tbody>
+    </table> 
+
+        
+	</div>
+
+	<!-- 分页 -->
+    <div class="page">
+        {$_page}
+    </div>
+</div>
+
+</block>
+<block name="script">
+<link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+<php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+<link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script type="text/javascript">
+$(function(){
+	//搜索功能
+	$("#search").click(function(){
+		var url = $(this).attr('url');
+		var status = $("#sch-sort-txt").attr("data");
+        var query  = $('.search-form').find('input').serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+        if( url.indexOf('?')>0 ){
+            url += '&' + query;
+        }else{
+            url += '?' + query;
+        }
+		window.location.href = url;
+	});
+
+	/* 状态搜索子菜单 */
+	$(".search-form").find(".drop-down").hover(function(){
+		$("#sub-sch-menu").removeClass("hidden");
+	},function(){
+		$("#sub-sch-menu").addClass("hidden");
+	});
+	$("#sub-sch-menu li").find("a").each(function(){
+		$(this).click(function(){
+			var text = $(this).text();
+			$("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+			$("#sub-sch-menu").addClass("hidden");
+		})
+	});
+
+    //回车自动提交
+    $('.search-form').find('input').keyup(function(event){
+        if(event.keyCode===13){
+            $("#search").click();
+        }
+    });
+
+    $('#time-start').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:"zh-CN",
+	    minView:2,
+	    autoclose:true
+    });
+
+    $('#datetimepicker').datetimepicker({
+       format: 'yyyy-mm-dd',
+        language:"zh-CN",
+        minView:2,
+        autoclose:true,
+        pickerPosition:'bottom-left'
+    })
+    
+    
+  //只有一个模型时，点击新增
+	$('.document_add').click(function(){
+		var url = $(this).attr('url');
+		if(url != undefined && url != ''){
+			window.location.href = url;
+		}
+	});
+    
+})
+</script>
+</block>

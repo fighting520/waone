@@ -1,0 +1,45 @@
+<block name="body">
+    <form action="{:addons_url('CurdForAdmin://Create/create')}" method="post" class="form-horizontal">
+        <div class="form-item check-tips"><i class="icon-add"></i> 使用本插件请保证./Application/Admin/下的Controller、Module、View目录保持可写</div>
+        <div class="form-item check-tips"><i class="icon-add"></i> 默认生成了数据表自动带上一个title字段（若不需要可删除），生成了之后还需要如下操作：</div>
+        <div class="form-item check-tips">　　1、添加到对应的菜单</div>
+        <div class="form-item check-tips">　　2、添加表字段</div>
+        <div class="form-item check-tips">　　3、修改生成的模板（index.html以及add.html）</div>
+        <div class="form-item check-tips">　　4、完善模型（如需要）</div>
+        <div class="form-item">
+            <label class="item-label">控制器名称<span class="check-tips">如：News</span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="controller_name" value=""> *
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">表名称<span class="check-tips">如：news，默认使用控制器的名称</span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="table_name" value="">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">模型名称<span class="check-tips">如：News，默认使用控制器名称</span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="module_name" value="">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">控制器描述<span class="check-tips">如：新闻、动态等</span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="controller_description" value="">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">作者信息<span class="check-tips">如：eecjimmy</span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="author_description" value="">
+            </div>
+        </div>
+        <div class="form-item">
+            <input type="hidden" name="id" value="{$info.id|default=''}">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">开 始 生 成
+            </button>
+        </div>
+    </form>
+</block>

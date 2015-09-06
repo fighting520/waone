@@ -1,0 +1,45 @@
+
+<style>
+*{ margin:0; padding:0}
+	body{ background:#f9f9f9; padding:60px 0; font-family:"微软雅黑"}
+	.abtn{ height:130px; width:256px; background:#FFF; display:inline-block; overflow:hidden; margin:6px 20px; box-sizing:border-box; border:2px solid #fff; cursor:pointer; transition: all 0.35s ease-out}
+	.abtn:hover{ border:2px solid #dedede}
+	.abtn>img,.abtn>span{ float:left}
+	.abtn>img{ margin:0 0 0 10px}
+	.abtn h1{ font-size:48px; color:#86db00; width:150px; height:50px; line-height:50px; display:block; text-align:center; margin-top:24px; font-weight:normal}
+	.abtn h4{ font-size:16px; color:#3e3a39;	 width:150px; height:30px; line-height:30px; display:block; text-align:center; font-weight:normal; /*color:#ff2610*/}
+	.aedit{ position:absolute; right:24px; top:24px; font-size:14px; text-decoration:none; color:#999; background:url(__STATIC__/images/edit.png) no-repeat left; padding-left:15px; background-size:14px}
+	.aedit:hover{ color:#333}
+</style>
+
+<div style="width:1160px; height:200px; background:#FFF; margin:0 auto 26px auto; overflow:hidden; position:relative">
+	<img src="{$user.pimg}" width="160" style="margin:20px; float:left" />
+    <div style="float:left; margin:20px 20px 20px 0; font-size:14px;">
+    	<h1 style="font-size:20px; font-weight:normal; color:#86db00; margin:0 0 30px 0">{$user.nickname}</h1>
+        <p style="padding:2px 0"><label style="color:#999">栏目：</label>{:get_cate($user['lanmu'])}</p>
+        <p style="padding:2px 0"><label style="color:#999">邮箱：</label>{$user.email}</p>
+        <p style="padding:2px 0"><label style="color:#999">标签：</label>{$user.bqname}</p>
+        <p style="padding:2px 0"><label style="color:#999">备注：</label>{$user.remark}</p>
+        <notempty name="$user.card">
+        <img style="position:absolute; bottom:14px; right:14px"   src="{$user.card}" width="100" />
+        </notempty>
+        <a class="aedit" href="{:U('User/edit')}">编辑资料</a>
+    </div>
+</div>
+
+<div style="width:1200px; margin:0 auto">
+	<a class="abtn" href="{:U('article/add',array('cate_id'=>$url['document_add'],'model_id'=>$url['document_add'],'pid'=>I('pid',0)))}"
+	><img src="__STATIC__/images/add.png" width="80" /><span><h4 style="margin-top:47px">新增文档</h4></span></a>
+	<a class="abtn" href="{:U('article/draftbox')}"><img src="__STATIC__/images/draft.png" width="80" /><span><h1>{$info.document_draft}</h1><h4>草稿箱</h4></span></a>
+    <a class="abtn" href="{:U('article/mydocument')}"><img src="__STATIC__/images/my_doc.png" width="80" /><span><h1>{$info.document_my}</h1><h4>我的文档</h4></span></a>
+    <if condition="$show_count">	
+    <a class="abtn" href="{:U('User/updatePassword')}"><img src="__STATIC__/images/pwd_edit.png" width="80" /><span><h4 style="margin-top:47px">修改密码</h4></span></a>
+	<a class="abtn" href="{:U('article/examine')}"><img src="__STATIC__/images/doc_check.png" width="80" /><span><h1>{$info.document_wait}</h1><h4>待审核文档</h4></span></a>
+	<a class="abtn" href="{:U('user/examine')}"><img src="__STATIC__/images/user_check.png" width="80" /><span><h1>{$info.user_wait}</h1><h4>待审核用户</h4></span></a>
+    <a class="abtn" href="{:U('article/index')}"><img src="__STATIC__/images/all_doc.png" width="80" /><span><h1>{$info.document}</h1><h4>所有文档</h4></span></a>
+    <a class="abtn" href="{:U('action/actionlog')}"><img src="__STATIC__/images/user_diary.png" width="80" /><span><h1>{$info.action}</h1><h4>用户日志</h4></span></a>  
+    <else />  
+    <a class="abtn" href="{:U('article/notpass')}"><img src="__STATIC__/images/refuse.png" width="80" /><span><h1 style="color: <if condition="$info.document_unpast gt 0 ">#CC3900<else/>#dfdfdf</if>">{$info.document_unpast}</h1><h4>未通过审核文档</h4></span></a> 
+    </if>
+</div>
+

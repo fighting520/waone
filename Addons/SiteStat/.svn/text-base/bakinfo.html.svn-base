@@ -1,0 +1,91 @@
+<div class="container-span top-columns cf">
+	<dl class="show-num-mod">
+	<a href="{:U('article/add',array('cate_id'=>$url['document_add'],'model_id'=>$url['document_add'],'pid'=>I('pid',0)))}">
+		<dt><i class="count-icon user-count-icon"></i></dt>
+		<dd>
+			<strong></strong>
+			<span>新增文档</span>
+		</dd>
+	</a>
+	</dl>
+	<dl class="show-num-mod">
+	<a href="{:U('article/draftbox')}">
+		<dt><i class="count-icon user-action-icon"></i></dt>
+		<dd>
+			<strong>{$info.document_draft}</strong>
+			<span>草稿数</span>
+		</dd>
+		</a>
+	</dl>
+	<dl class="show-num-mod">
+	<a href="{:U('article/mydocument')}">
+		<dt><i class="count-icon doc-count-icon"></i></dt>
+		<dd>
+			<strong>{$info.document_my}</strong>
+			<span>我的文档</span>
+		</dd>
+	</a>
+	</dl>
+	<if condition="$show_count">	
+	<dl class="show-num-mod">
+	<a href="{:U('User/edit')}">
+		<dt><i class="count-icon doc-modal-icon"></i></dt>
+		<dd>
+			<strong></strong>
+			<span>修改个人资料</span>
+		</dd>
+	</a>
+	</dl>
+	<br>
+	<dl class="show-num-mod">
+	<a href="{:U('article/examine')}">
+		<dt><i class="count-icon category-count-icon"></i></dt>
+		<dd>
+			<strong>{$info.document_wait}</strong>
+			<span>待审核文章</span>
+		</dd>
+		</a>
+	</dl>
+	
+	
+	<dl class="show-num-mod">
+	<a href="{:U('user/examine')}">
+		<dt><i class="count-icon category-count-icon"></i></dt>
+		<dd>
+			<strong>{$info.user_wait}</strong>
+			<span>待审核用户</span>
+		</dd>
+		</a>
+	</dl>
+	
+	<dl class="show-num-mod">
+	<a href="{:U('article/index')}">
+		<dt><i class="count-icon category-count-icon"></i></dt>
+		<dd>
+			<strong>{$info.document}</strong>
+			<span>所有文档</span>
+		</dd>
+		</a>
+	</dl>
+	
+	<dl class="show-num-mod">
+	<a href="{:U('action/actionlog')}">
+		<dt><i class="count-icon category-count-icon"></i></dt>
+		<dd>
+			<strong>{$info.action}</strong>
+			<span>用户日志</span>
+		</dd>
+		</a>
+	</dl>
+	<else />
+	<dl class="show-num-mod">
+	<a href="{:U('article/notpass')}">
+		<dt><i class="count-icon category-count-icon"></i></dt>
+		<dd>
+			<strong style="color:red">{$info.document_unpast}</strong>
+			<span>未通过</span>
+		</dd>
+		</a>
+	</dl>
+	</if>
+</div>

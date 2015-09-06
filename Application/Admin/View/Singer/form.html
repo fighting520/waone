@@ -1,0 +1,152 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <div class="main-title">
+        <h2>{$meta_title}</h2>
+    </div>
+    <form action="{:U('save')}" method="post" class="form-horizontal">
+        <div class="form-item">
+            <label class="item-label">昵称<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="username" value="{$info.username}">
+            </div>
+        </div>
+        
+        <div class="form-item">
+            <label class="item-label">姓名<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="name" value="{$info.name}">
+            </div>
+        </div>
+        
+        
+        <div class="form-item">
+		<label class="item-label">性别<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_sex')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="sex" value="{$vo.value}"
+			<eq name="info.sex" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	 <div class="form-item">
+            <label class="item-label">电话<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="phone" value="{$info.phone}">
+            </div>
+        </div>
+        
+         <div class="form-item">
+            <label class="item-label">地区<span class="check-tips"></span></label>
+            <div class="controls">
+                {:hook('J_China_City',array('province'=>$info['pos_province'],'city'=>$info['pos_city'],'dselect'=>'iselect','district'=>$info['pos_district'],'community'=>$info['pos_community']))}    
+            </div>
+        </div>
+        
+        
+         <div class="form-item">
+            <label class="item-label">邮箱<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="email" value="{$info.email}">
+            </div>
+        </div>
+        
+        
+        
+    <div class="form-item">
+		<label class="item-label">角色<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_singer')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="role" value="{$vo.value}"
+			<eq name="info.role" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	
+	<div class="form-item">
+		<label class="item-label">签约状态<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_sign')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="sign_status" value="{$vo.value}"
+			<eq name="info.sign_status" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	<div class="form-item">
+            <label class="item-label">公司<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="company" value="{$info.company}">
+            </div>
+        </div>
+	
+	<div class="form-item">
+            <label class="item-label">身份证<span class="check-tips"></span></label>
+            <div class="controls">
+                    {:hook('UploadImages', array('name'=>'idcard','value'=>$info['idcard'],'buttonText'=>'上传图片','selectMultiple'=>'false'))}
+            </div>
+        </div>
+        
+        
+        
+	<div class="form-item">
+		<label class="item-label">简介<span class="check-tips"></span></label>
+		<div class="controls">
+	
+			<textarea  cols="54" class="input-xxlarge"  style="border: 1px solid #dedede; padding:4px"   rows="4"  name="summary">{$info['summary']}</textarea>		
+      
+		</div>
+	</div>
+	
+	
+	
+	<div class="form-item">
+		<label class="item-label">状态<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_status')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="status" value="{$vo.value}"
+			<eq name="info.status" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	
+	<div class="form-item">
+		<label class="item-label">审核意见<span class="check-tips"></span></label>
+		<div class="controls">
+	
+			<textarea  cols="54" class="input-xxlarge"  style="border: 1px solid #dedede; padding:4px"   rows="4"  name="reason">{$info['reason']}</textarea>		
+      
+		</div>
+	</div>
+   
+   
+   
+   
+   
+        <div class="form-item">
+            <input type="hidden" name="uid" value="{$info.uid|default=''}">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定
+            </button>
+            <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+        </div>
+        
+        
+    </form>
+</block>
+<block name="script">
+    <script type="text/javascript" charset="utf-8">
+        //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script>
+</block>

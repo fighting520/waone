@@ -1,0 +1,91 @@
+<extend name="Public/base"/>
+<block name="body">
+    <!-- 标题 -->
+    <div class="main-title">
+        <h2>{$meta_title}({$_total|default=0})</h2>
+    </div>
+    <!-- 按钮工具栏 -->
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <a class="btn" href="{:U('form')}">新 增</a>
+            </div>
+        </div>
+        
+        <form id="searchForm"
+		action="{:U('index')}" method="post">
+        <!-- 高级搜索 -->
+		<div class="search-form fr cf">
+		
+		
+		<div class="shref">
+				<volist name=":parse_dict_attr('oc_status')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="status" value="{$vo.value}"  onclick="selectzt()"
+			<if condition="$vo.value eq  $status"> checked</if>> {$vo.label} </label></volist>
+		</div>
+			<div class="shref">
+				<input type="text" name="uid" class="search-input" value="{:I('uid')}" placeholder="请输入用户ID">
+				<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();" />
+			</div>
+            
+		</div>    
+      </form>
+    </div>
+    <!-- 数据表格 -->
+    <div class="data-table">
+        <table>
+            <!-- 表头 -->
+            <thead>
+            <tr>
+               <th class="">用户ID</th>
+		       <th class="">姓名</th>
+		       <th>角色</th>
+		       <th>电话</th>
+		       <th>签约状态</th>
+		       <th class="">状态</th>
+		       <th class="">操作</th>
+            </tr>
+            </thead>
+            <!-- 列表 -->
+            <tbody>
+            <notempty name="list">
+                <volist name="list" id="data">
+                    <tr>
+                        <td>{$data.uid}</td>
+                        <td><a href="{:U('form',array('id'=>$data['uid']))}">{$data.name}</a></td>
+                   		
+ 						 <td>{:get_dict_attr('oc_singer',$data['role'])}</td>
+ 						  <td>{$data.role}</td>
+ 						  <td>{:get_dict_attr('oc_sign',$data['sign_status'])}</td>
+                        <td>{:get_dict_attr('oc_status',$data['status'])}</td>
+                        <td>
+                            <a href="{:U('form',array('id'=>$data['uid']))}">编辑</a>
+                            <a href="{:U('del',array('id'=>$data['uid']))}" class="confirm ajax-get">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <tr>
+                    <td colspan="7" style="text-align: center">暂无相关信息</td>
+                </tr>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+	function selectzt(){
+		$("#pageNo").val(1);
+		$("#pageSize").val(10);
+		$("#searchForm").submit();
+    	return false;
+    }
+    
+        //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script>
+</block>

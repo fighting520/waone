@@ -1,0 +1,102 @@
+<extend name="Public/base" />
+
+<block name="body">
+
+	<link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+<php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+<link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<div class="main-title">
+	<h2>{$meta_title}</h2>
+</div>
+<form action="{:U('save')}" method="post" class="form-horizontal">
+
+
+
+	<div class="form-item">
+		<label class="item-label">标题<span class="check-tips"></span></label>
+		<div class="controls">
+			<input type="text" class="text input-large" name="title"
+				value="{$info.title}">
+		</div>
+	</div>
+
+	<div class="form-item">
+		<label class="item-label">宣传图<span class="check-tips"></span></label>
+		<div class="controls">{:hook('UploadImages',
+			array('name'=>'cover_url','value'=>$info['cover_url'],'buttonText'=>'上传图片','selectMultiple'=>'true'))}
+		</div>
+	</div>
+
+
+	<div class="form-item">
+		<label class="item-label">链接<span class="check-tips"></span></label>
+		<div class="controls">
+			<input type="text" class="text input-large" name="link"
+				value="{$info.link|default=''}">
+		</div>
+	</div>
+	
+		
+
+
+	<div class="form-item">
+		<label class="item-label">内容<span class="check-tips"></span></label>
+		<div class="controls">
+		<label class="textarea">
+			<textarea name="content">{$info['content']}</textarea>
+			{:hook('adminArticleEdit',
+			array('name'=>'content','value'=>$info['content']))}
+</label>
+		</div>
+	</div>
+	
+	<div  class="form-item">
+		<label class="item-label">发布日期<span class="check-tips"></span></label>
+		<div class="controls">
+			<input type="text" 
+							name="create_time" class="text time"
+							value="{$info['create_time']|time_format}"
+							placeholder="请选择日期" />
+		</div>
+	</div>
+	
+	
+	<div class="form-item">
+		<label class="item-label">状态<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_status')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="status" value="{$vo.value}"
+			<eq name="info.status" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	
+
+	
+	<div class="form-item">
+		<input type="hidden" name="id" value="{$info.id|default=''}" />
+		<button class="btn submit-btn ajax-post" id="submit" type="submit"
+			target-form="form-horizontal">确 定</button>
+		<button class="btn btn-return"
+			onclick="javascript:history.back(-1);return false;">返 回</button>
+	</div>
+</form>
+</block>
+<block name="script"> <script type="text/javascript"
+	charset="utf-8">
+	
+$('.time').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    language:"zh-CN",
+    todayBtn: true,
+    minView:2,
+    autoclose:true
+});
+        //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script> </block>

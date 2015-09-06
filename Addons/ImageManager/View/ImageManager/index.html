@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>图片管理</title>
+ <!--[if lt IE 9]>
+<script type="text/javascript" src="__STATIC__/jquery-1.10.2.min.js"></script>
+<![endif]--><!--[if gte IE 9]><!-->
+<script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery.mousewheel.js"></script>
+<script src="{$addon_path}Public/jquery.lazyload.js" type="text/javascript" charset="utf-8"></script>
+<!--<![endif]-->
+<link rel="stylesheet" type="text/css" href="{$addon_path}Public/style/reset.css" />
+<link rel="stylesheet" type="text/css" href="{$addon_path}Public/style/style.css" />
+</head>
+
+<body style="padding:33px 8px 52px;">
+<div class="header">
+	<h2>图片管理
+        <select name="time" id="strTime">
+            <option value="all">全部日期</option>
+            <volist name='strTimes' id='time'>
+            <option value="{$key}" data-cur='{$curtime}' <eq name='key' value='$curtime'>selected</eq>>{$time}</option>
+            </volist>
+        </select>
+    </h2>
+</div>
+
+<ul id="pics" class="pictures cf" data-columns="6">
+	<volist name='_list' id='pic'>
+        <li class="picture" data-id="{$pic.id}" data-original="{$pic.url}"  data-json='"url": "{$pic.url}","path": "{$pic.path}","id": "{$pic.id}","status": 1,"info": "上传成功"'>
+        	<div class="picture-preview js--select-attachment type-image subtype-jpeg portrait">
+                <div class="thumbnail">
+                    <div class="centered"><img src="{$addon_path}Public/grey.gif" data-original="{$pic.url}" /></div>
+                </div>
+            </div>
+            <a title="取消选择" href="javascript:;" class="check"><div class="media-modal-icon"></div></a>
+        </li>
+    </volist>
+</ul>
+<div class="footer">
+	<input type="button" id="confirm" value="确定" disabled />
+</div>
+
+<script type="text/javascript">
+$(".picture").click(function(e){
+	if(e.ctrlKey) {
+		if ($(this).hasClass("selected")) {
+			$(this).removeClass("details selected");
+			if ($(".details").length <= 0) {
+				$(".selected:last").addClass("details");
+			}
+		}else {
+			$(this).addClass("details selected").siblings().removeClass("details");
+			//$("#confirm").prop("disabled", false);
+		}
+	}else {
+		if ($(this).hasClass("details selected")) {
+			$(this).removeClass("details selected");
+			//$("#confirm").prop("disabled", true);
+		}else {
+			$(this).addClass("details selected").siblings().removeClass("details selected");
+			//$("#confirm").prop("disabled", false);
+		}
+	}
+	if ($(".selected").length <= 0) {
+		$("#confirm").prop("disabled", true);
+	}else {
+		$("#confirm").prop("disabled", false);
+	}
+})
+$("#confirm").click(function(e) {
+	var viewtype = "{$viewtype}"; 
+	if(viewtype==null||viewtype==''){
+	if ($("li.selected").length <= 0) {
+		return false;
+	}
+	$("li.selected").each(function(index, element) {
+		window.parent.uploadPicture{$name}({}, "{" + $(this).data("json") + "}");
+        //console.log($(this).data("json"));
+    });
+	$(window.parent.document).find(".fancybox-overlay").click();
+	}else if(viewtype=='ckeditor'){
+		if ($("li.selected").length <= 0) {
+			return false;
+		}
+		$("li.selected").each(function(index, element) {
+		//	alert($(this).data("original"));
+			 choose($(this).data("original"));
+	       
+	    });
+	}
+});
+var url = "{:addons_url('ImageManager://ImageManager/ImageManager', array('name' => $name))}";
+$("#strTime").change(function(e) {
+	var value = $(this).val();
+	window.location.href = url + '&times='+value;
+});
+$("img").lazyload({
+	effect : "fadeIn"
+});
+
+
+function choose(obj){ 
+   window.opener.CKEDITOR.tools.callFunction({$callback},obj);  
+   window.close(); 
+}
+
+</script>
+</body>
+</html>

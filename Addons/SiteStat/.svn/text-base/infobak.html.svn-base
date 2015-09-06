@@ -1,0 +1,82 @@
+ <div class="container-span top-columns cf">
+ 
+
+	<dl class="show-num-mod">
+		<dd>
+			<a href="{:U('article/add',array('cate_id'=>$url['document_add'],'model_id'=>$url['document_add'],'pid'=>I('pid',0)))}"><span>新增文档</span></a>
+			
+		</dd>
+	</dl>
+	<dl class="show-num-mod">
+		<dd>
+			
+			<a href="{:U('article/draftbox')}"><span>草稿数</span></a>
+			<strong>{$info.document_draft}</strong>
+		</dd>
+	</dl>
+	
+	
+
+	
+	<dl class="show-num-mod">
+	
+		<dd>
+			
+			<a href="{:U('article/mydocument')}"><span>我的文档</span></a>
+			<strong>{$info.document_my}</strong>
+		</dd>
+	</dl>
+	
+	
+	
+<if condition="$show_count">	
+	<dl class="show-num-mod">
+		
+		<dd>
+			<a href="{:U('User/edit')}"><span>修改个人资料</span></a>
+			
+		</dd>
+	</dl>
+	
+	<br>
+	<dl class="show-num-mod">
+		<dd>
+			<a href="{:U('article/examine')}"><span>待审核文章</span></a>
+			<strong>{$info.document_wait}</strong>
+			
+		</dd>
+	</dl>
+	
+	<dl class="show-num-mod">
+		<dd>
+			<a href="{:U('user/examine')}"><span>待审核用户</span></a>
+			<strong>{$info.user_wait}</strong>
+			
+		</dd>
+	</dl>
+	
+	<dl class="show-num-mod">
+		<dd>
+			<a href="{:U('article/index')}"><span>所有文档</span></a>
+			<strong>{$info.document}</strong>
+			
+		</dd>
+	</dl>
+	
+	<dl class="show-num-mod">
+		<dd>
+			<a href="{:U('action/actionlog')}"><span>用户日志</span></a>
+			<strong>{$info.action}</strong>
+			
+		</dd>
+	</dl>
+<else/> 
+     <dl class="show-num-mod">
+		<dd>
+			<a href="{:U('article/notpass')}"><span>未通过</span></a>
+			<strong>{$info.document_unpast}</strong>
+			
+		</dd>
+	 </dl>
+</if>
+</div>

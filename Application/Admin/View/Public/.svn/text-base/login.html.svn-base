@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>挖哇 - 编辑登陆</title>
+<style>
+*{ margin:0; padding:0}
+body{ font: normal 100% "Microsoft YaHei", "tahoma"; background:#f6f6f6}
+li{ list-style:none}
+label,input,i,span,img{ vertical-align:middle; display:inline-block}
+input,button{outline:none}
+label{ color:#444; width:40px; height:38px; line-height:38px; text-align:right; display:inline-block; background:#f9f9f9; border:1px solid #dedede; border-right:none}
+img{ display:block}
+.transfrom{ -webkit-transition: all 1s; -moz-transition: all 1s; -o-transition: all 1s; transform: all 1s;}
+.left{ float:left}
+.right{ float:right}
+.header{ height:40px; width:100%; background:#383838; }
+.header a{ color:#999999; font-size:14px; text-decoration:none; margin-left:15px}
+.box{ width:400px; margin:40px auto; padding:40px; border:1px solid #dedede; background:#FFF; overflow:hidden}
+.box h3{ text-align:center; font-size:30px; font-weight:normal; border-bottom:1px solid #dedede; padding-bottom:20px}
+.header a:hover{ color:#FFF}
+.login{ width:540px; margin-top:40px}
+.login>li{ margin-bottom:20px; position:relative}
+.text{ width:350px; height:38px; border:1px solid #dedede; padding-left:8px; color:#444; font-size:16px}
+.code{ margin:20px 0 0 0; background:#CCC}
+.submit{ border:1px solid #86DB00; background:#4bbd00; color:#EDFFD1; font-size:24px; width:400px; height:50px;}
+.submit:hover{ background:#86DB00}
+.check-tips{ font-size:14px}
+.footer{ position:fixed; bottom:0px; left:0; width:100%; margin:0 auto; font-size:12px; text-align:center; margin-bottom:20px; color:#999}
+</style>
+<script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	
+	//初始化选中用户名输入框
+	$("#itemBox").find("input[name=username]").focus();
+	//刷新验证码
+	var verifyimg = $(".verifyimg").attr("src");
+    $(".reloadverify").click(function(){
+        if( verifyimg.indexOf('?')>0){
+            $(".verifyimg").attr("src", verifyimg+'&random='+Math.random());
+        }else{
+            $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
+        }
+    });
+
+	
+    $("form").submit(function(){
+		var self = $(this);
+		$.post(self.attr("action"), self.serialize(), success, "json");
+		return false;
+
+		function success(data){
+			if(data.status){
+				window.location.href = data.url;
+			} else {
+				self.find(".check-tips").text(data.info);
+				//刷新验证码
+				$(".reloadverify").click();
+			}
+		}
+	});
+	
+	
+
+})
+
+	
+</script>
+</head>
+<body>
+
+<div class="header"><div style="width:1080px; margin:0 auto; overflow: hidden; height:40px; line-height:40px"><img class="left" src="__STATIC__/images/LOGO.png" alt="LOGO" height="40" /><a href="" style="margin-right:10px">首页</a><a target="_blank" href="http://wawa.fm" >官网</a><span class="right"><a href="{:U('Admin/Public/login')}">登陆</a><a href="/waone/index.php?s=Home/User/register">注册</a></span></div></div>
+<div class="box">
+	<form  action="{:U('login')}"  method=post>
+    	<h3>登陆挖哇</h3>
+    	<ul class="login">        
+        	<li>
+            	<label style="background: url(__STATIC__/images/login_icon.png) no-repeat 11px -62px"></label><input id="email"  name="username" class="text" type="text" placeholder="邮箱" />
+            </li>
+        	<li>
+            	<label style="background: url(__STATIC__/images/login_icon.png) no-repeat 11px -28px"></label><input id="password" name="password"  class="text" type="password"placeholder="密码" />
+            </li>          
+        	<li>
+            	<label style="background: url(__STATIC__/images/login_icon.png) no-repeat 11px 10px"></label><input class="text" type="text" name="verify" placeholder="验证码" style="width:180px" />
+            	
+            	<img class="verifyimg reloadverify" alt="点击切换" src="{:U('Public/verify')}" height="40" style="margin-left:5px; display:inline-block"; height:50px />
+            	
+            </li>                        
+            <li><input id="submit" class="submit transfrom" type="submit" value="登陆" /></li>   
+            <li><div class="check-tips"></div></li>                              
+        </ul>
+    </form>
+</div>
+<div class="footer">©2014-2015   广州市伟图信息技术有限公司<br /> 粤ICP备13077837号-2</div>
+</body>
+</html>

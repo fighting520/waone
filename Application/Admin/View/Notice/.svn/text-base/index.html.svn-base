@@ -1,0 +1,123 @@
+<extend name="Public/base"/>
+<block name="body">
+    <!-- 标题 -->
+    <div class="main-title">
+        <h2>{$meta_title}({$_total|default=0})</h2>
+    </div>
+    <!-- 按钮工具栏 -->
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <a class="btn" href="{:U('form')}">新 增</a>
+            </div>
+        </div>
+        
+        
+            <!-- 高级搜索 -->
+		  <form id="searchForm"
+		action="{:U('index')}" method="post"
+        <!-- 高级搜索 -->
+		<div class="search-form fr cf">
+		
+		
+		<div class="shref">
+		<label>来源：</label>
+                		<volist name=":parse_dict_attr('oc_msource')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="mtype" value="{$vo.value}"  onclick="selectzt()"
+			<if condition="$vo.value eq  $mtype"> checked</if>> {$vo.label} </label></volist>
+                		&nbsp;&nbsp;
+		<label>状态：</label>
+		<label class="select" ><select  name="status" onchange="selectzt()">
+				<volist name=":parse_dict_attr('oc_status')" id="vo"> 
+			 <option
+				 value="{$vo.value}"  
+			<if condition="$vo.value eq  $status"> selected</if>> {$vo.label} </volist>
+			<option
+				 value="10"  
+			<if condition="10 eq  $status"> selected</if>>全部
+			</select> </label>
+		
+		
+				
+		</div>
+			<div class="shref">
+				<input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入标题">
+				<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();" />
+			</div>
+            
+		</div>    
+      </form>
+      
+      
+    </div>
+    <!-- 数据表格 -->
+    <div class="data-table">
+        <table>
+            <!-- 表头 -->
+            <thead>
+            <tr>
+      			<th>ID</th>
+                <th>标题</th>
+                <th>用户名</th>
+                <th width="10%">宣传图</th>  
+                <th>跳转链接</th>
+                <th>来源</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <!-- 列表 -->
+            <tbody>
+            <notempty name="list">
+                <volist name="list" id="data">
+                    <tr>
+                    <td>{$data.id}</td>
+                        <td><a href="{:U('form',array('id'=>$data['id']))}">{$data.title}</a></td>
+                        <td>{:get_ocusername($data['uid'])}</td>
+                         <td><a
+						href="{$data.cover_url}" 
+						class="fancybox" rel="gallery" ><img
+							src="{$data.cover_url}"  style = "width:100%" /></a></td>
+        
+                        
+                        <td><a href="{$data.link}" target="_blank">跳转访问</a></td>
+                        <td>{:get_dict_attr('oc_msource',$data['mtype'])}</td>
+                        <td>{:get_dict_attr('oc_status',$data['status'])}</td>
+                        <td>
+                            <a href="{:U('form',array('id'=>$data['id']))}">编辑</a>
+                            <a href="{:U('del',array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <tr>
+                    <td colspan="8" style="text-align: center">暂无相关信息</td>
+                </tr>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+    
+    //回车自动提交
+ 
+	
+	
+	//搜索功能
+	function selectzt(){
+		$("#pageNo").val(1);
+		$("#pageSize").val(10);
+		$("#searchForm").submit();
+    	return false;
+    }
+
+
+        //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script>
+</block>

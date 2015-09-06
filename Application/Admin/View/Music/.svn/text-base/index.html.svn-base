@@ -1,0 +1,191 @@
+<extend name="Public/base"/>
+<block name="body">
+    <!-- 标题 -->
+    <div class="main-title">
+        <h2>{$meta_title}({$_total|default=0})</h2>
+    </div>
+    
+
+    <!-- 按钮工具栏 -->
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <a class="btn" href="{:U('form')}">新 增</a>
+            </div>
+        </div>
+        
+        
+        
+         <!-- 高级搜索 -->
+		  <form id="searchForm"
+		action="{:U('index')}" method="post"
+        <!-- 高级搜索 -->
+		<div class="search-form fr cf">
+		
+		
+		<div class="shref">
+		<label>来源：</label>
+                		<volist name=":parse_dict_attr('oc_msource')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="mtype" value="{$vo.value}"  onclick="selectzt()"
+			<if condition="$vo.value eq  $mtype"> checked</if>> {$vo.label} </label></volist>
+                		&nbsp;&nbsp;
+		<label>状态：</label>
+		<label class="select" ><select  name="del_flag" onchange="selectzt()">
+				<volist name=":parse_dict_attr('oc_delflag')" id="vo"> 
+			 <option
+				 value="{$vo.value}"  
+			<if condition="$vo.value eq  $del_flag"> selected</if>> {$vo.label} </volist>
+			<option
+				 value="10"  
+			<if condition="10 eq  $del_flag"> selected</if>>全部
+			</select> </label>
+		</div>
+		
+		<div class="shref">
+				<input type="text" name="songname" class="search-input" value="{:I('songname')}" placeholder="歌名">
+			</div>
+		
+			<div class="shref">
+				<input type="text" name="songer" class="search-input" value="{:I('songer')}" placeholder="歌手">
+				<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();" />
+			</div>
+            
+		</div>    
+      </form>
+        
+        
+        
+    </div>
+    
+    
+   
+    
+    
+    
+    
+    <!-- 数据表格 -->
+    <div class="data-table">
+        <table id="contentTable"  >
+            
+            <!-- 表头 -->
+            <thead>
+            <tr>
+               <th class="sort id" width="5%">歌曲ID</th>
+				<th class="sort songname" width="12%">歌曲名称</th>
+				<th class="sort resourcecode" width="10%">资源编码</th>
+				<th class="sort songer" width="12%">演唱者</th>
+				
+				<th class="sort songphoto" width="12%">歌曲配图</th>
+				<th class="sort filename" width="16%">音档</th>
+				<th class="sort remarks" width="11%">备注</th>
+				<th width="7%">来源</th>
+				<th width="7%">状态</th>
+				<th class="sort updateDate" width="12%" >更新时间</th> 
+                <th width="9%">操作</th>
+            </tr>
+            </thead>
+            <!-- 列表 -->
+            <tbody>
+            <notempty name="list">
+                <volist name="list" id="data">
+                    <tr>
+                        <td>{$data.id}</td>
+                        <td><a href="{:U('form',array('id'=>$data['id']))}">{$data.songname}</a></td>
+                        <td>{$data.resourcecode}</td>
+                        <td>{$data.songer}</td>
+                        <td><a
+						href="{$data.songphoto}" 
+						class="fancybox" rel="gallery" ><img
+							src="{$data.thumbnail_url}"  style = "width:100%" /></a></td>
+                        <td>
+                        
+                        <audio controls  loop preload="none">
+
+ 
+    <source src=" <if condition="$data['filename'] eq '' ">{$data.filename320}<else /> {$data.filename}</if> " type="audio/mpeg">
+
+</audio>
+			              
+                        </td>
+                        <td>{$data.remarks}</td>
+                        <td>{:get_dict_attr('oc_msource',$data['mtype'])}</td>
+                        <td>{:get_dict_attr('oc_delflag',$data['del_flag'])}</td>
+                        <td>{$data.update_date}</td>
+                        <td>
+                        <a href="javascript:void(0);"
+					onclick="preview({$data.id});">歌词预览</a>
+					 <script type="text/javascript">
+				
+				function preview(mid){
+					var lyric ='暂无歌词';
+					
+					$.getJSON("{:U('music/findByIds')}",{id:mid},function(data){
+						if(data!=''&&data!=null){
+						  lyric = data['lyric'];
+						} 
+						 var html =  '<div class="msg-div">' +
+				            '<label  style="border:none;"><textarea rows="20" cols="70" id="reason" name="reason" placeholder="如未通过请说明原因" style="border:none" >'+lyric+'</textarea></label>' +
+				            '<div class="errorBlock" style="display: none;"></div>' +
+				            '</div>';
+								
+						
+						 $.jBox(html,{
+							 title:"歌词预览",
+							 width:400,
+							 height:400,
+							 buttons: { '关闭': 0},
+							 submit : function (v, h, f) {
+								 
+							  //   top.$.jBox.tip("你叫：" + reason);
+							     //$.jBox.tip("你叫：" + h.find("#yourname").val());
+							     //$.jBox.tip("你叫：" + h.find(":input[name='yourname']").val());
+
+							     return true;
+							 }
+						 });
+					});
+					
+					
+					
+					
+				 }
+				
+				</script>
+                        
+                            <a href="{:U('form',array('id'=>$data['id']))}">编辑</a>
+                            <a href="{:U('del',array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <tr>
+                    <td colspan="11" style="text-align: center">暂无相关信息</td>
+                </tr>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+
+	  
+		
+    	function selectzt(){
+    		$("#pageNo").val(1);
+    		$("#pageSize").val(10);
+    		$("#searchForm").submit();
+        	return false;
+        }
+		
+
+		
+	
+   
+        //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script>
+</block>

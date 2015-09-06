@@ -1,0 +1,86 @@
+
+/* = uploadify上传插件样式------------------------------------------ */
+.file{ position:absolute; left:120px; top:0}
+.upload{ margin-left:20px;}
+.uploadify-button {
+	position: relative;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+	background-color: #27AE60;
+}
+
+.uploadify-queue-item {
+	position: absolute;
+	margin-top: 4px;
+	padding: 15px;
+	width: 470px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+.uploadify-queue-item .cancel {
+	float: right;
+}
+.uploadify-queue-item .cancel a,
+.uploadify-queue-item .cancel a:hover {
+	font-family: Consolas;
+	color: #404040;
+	text-decoration: none;
+	border-bottom: 0 none;
+}
+.uploadify-queue-item .fileName {
+	color: #2D7200;
+}
+.uploadify-error {
+	background-color: #FDE5DD !important;
+}
+.uploadify-queue-item.completed {
+	background-color: #E5E5E5;
+}
+.uploadify-progress {
+	background-color: #E5E5E5;
+	margin-top: 10px;
+	width: 100%;
+}
+.uploadify-progress-bar {
+	background-color: #0099FF;
+	height: 3px;
+	width: 1px;
+}
+
+
+.Validform_checktip{
+	margin-left:0 0 8px 140px;
+	color: #F00; display:block;
+}
+
+
+
+
+#btnf-close{
+    position: absolute;
+ top: 1px;
+    right: -40px;
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+}
+
+#btnf-close:hover {
+    text-decoration: none;
+    border-bottom: 0 none;
+}
+
+
+
+.upload-file-box .upload-file-item{
+position: relative;
+    margin-top: 8px;
+     overflow: visible;
+    float:left;
+    font: normal 100% 'Helvetica Neue', 'Arial', 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑';;
+   
+}
+.upload-file-box  .upload-pre-item span{
+   margin-left: 2px;
+}

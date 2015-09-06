@@ -1,0 +1,99 @@
+
+<link rel="stylesheet" type="text/css" href="__ADDONROOT__/style/UploadFiles.css">
+<div class="cols">
+	<div class="item">
+		<input id="upload_file_{$name}" type="file">
+		<input type="hidden" name="{$name}" value="{$valStr}" class="icon {$name}" />
+    <div class="upload-file-box">
+        <notempty name="valArr">
+             <volist name="valArr" id="v">
+                <div class="upload-file-item">
+                   {$v}<span id="btnf-close"  class='btnclose{$name}' onclick='btnclose{$name}(this)'   title='删除文件'>X</span>
+                </div>
+             </volist>
+        </notempty>
+    </div>
+	
+</div>
+<script type="text/javascript">
+$(function(){
+	//上传URL
+	//var url = "{:addons_url('Attachment://Attachment/upload?category='.$category['id'])}";
+
+	/* 初始化上传插件 */
+	$("#upload_file_{$name}").uploadify({
+        "height"          : 30,
+        "swf"             : "__STATIC__/uploadify/uploadify.swf",
+        "fileObjName"     : "download",
+        "buttonText"      : "{$buttonText}",
+        "uploader"        : "{:addons_url('Attachment://Attachment/upload',array('session_id'=>session_id()))}",
+        "width"           : 120,
+        'fileTypeExts'    : '*.jpg; *.png; *.gif;*.mp3;*.*',
+        "onUploadSuccess" : uploadSuccess{$name},
+        "successTimeout"  : 36000,
+        'onFallback' : function() {
+            alert('未检测到兼容版本的Flash.');
+        }
+    });
+})
+	/* 文件上传成功回调函数 
+    function uploadSuccess(file, data){
+        alert(data);
+    	var data = $.parseJSON(data);
+        if(data.status){
+        	$("input[name='attachment[info]']").val(data.data);
+        } else {
+        	alert(data.info);
+        }
+    }
+	*/
+	
+    
+    function uploadSuccess{$name}(file, data){
+        var data = $.parseJSON(data);
+        var src = '';
+        if(data.status){
+        	var selectMultiple = {$selectMultiple};
+        	if(selectMultiple){
+	            src = data.path;
+	            upload_img = "<div class='upload-file-item'>"+data.url+" <span id='btnf-close' onclick='btnclose{$name}(this)'  class='btn-close-{$name}' title='删除文件'>X</span></div>";
+	            picsbox = $("#upload_file_{$name}").siblings('.upload-file-box');
+	            picsbox.append(upload_img)
+	            picArr = [];
+	            for (var i = 0; i < picsbox.children().length ; i++) {
+	                picArr.push(picsbox.children('.upload-file-item:eq('+i+')').attr(src));
+	            };
+	            picStr = picArr.join('|');
+	            $('.icon.{$name}').val(picStr);
+        	}else{
+        		$(".icon.{$name}").val(data.path);
+	        	
+	        	$("#upload_file_{$name}").parent().find('.upload-file-box').html(
+	        		"<div class='upload-file-item'>"+data.url+" <span id='btnf-close' onclick='btnclose{$name}(this)'  class='btn-close-{$name}' title='删除文件'>X</span> </div>"
+	        	);
+        	}
+        } else {
+            updateAlert(data.info);
+            setTimeout(function(){
+                $('#top-alert').find('button').click();
+                $(that).removeClass('disabled').prop('disabled',false);
+            },1500);
+        }
+    }
+    
+   function  btnclose{$name}(obj) {
+    
+        //event.preventDefault();
+       
+        $(obj).parent().remove();
+        picsbox = $("#upload_file_{$name}").siblings('.upload-file-box');
+        picArr = [];
+        for (var i = 0; i < picsbox.children().length ; i++) {
+            picArr.push(picsbox.children('.upload-file-item:eq('+i+')').find('img').attr('src'));
+        };
+      
+        picStr = picArr.join('|');
+        $('.icon.{$name}').val(picStr);
+    };
+
+</script>

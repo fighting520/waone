@@ -1,0 +1,218 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <div class="main-title">
+        <h2>{$meta_title}</h2>
+    </div>
+    <form action="{:U('save')}" method="post" class="form-horizontal">
+     <input type="hidden" class="text " name="id" value="{$info.id}"/>
+
+    
+        <div class="form-item">
+            <label class="item-label">歌名<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text " name="songname" value="{$info.songname}">
+            </div>
+        </div>
+        
+        
+        <div class="form-item">
+            <label class="item-label">歌手<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text " name="songer" value="{$info.songer}">
+            </div>
+        </div>
+        
+        
+        <div class="form-item">
+            <label class="item-label">专辑名称<span class="check-tips">选填</span></label>
+            <div class="controls">
+                <input type="text" class="text " name="songalbum" value="{$info.songalbum}">
+            </div>
+        </div>
+        
+        <div class="form-item">
+		<label class="item-label">歌词信息<span class="check-tips">选填</span></label>
+		<div class="controls">
+	
+			<textarea  rows="15" cols="50"   style="border: 1px solid #dedede; padding:4px"     name="lyric">{$info['lyric']}</textarea>		
+      
+		</div>
+	</div>
+        
+         <div class="form-item">
+            <label class="item-label">专辑封面<span class="check-tips"></span></label>
+            <div class="controls">
+                    {:hook('UploadImages', array('name'=>'songphoto','value'=>$info['songphoto'],'buttonText'=>'上传图片','selectMultiple'=>'false'))}
+            </div>
+        </div>
+
+        
+         <div class="form-item">
+            <label class="item-label">音档[128kbps/mp3]<span class="check-tips">选填</span></label>
+            <div class="controls">
+                   {:hook('documentEditForm', array('name'=>'filename','value'=>$info['filename'],'buttonText'=>'上传歌曲','selectMultiple'=>'false'))}
+            </div>
+        </div>
+        
+        <div class="form-item">
+            <label class="item-label">音档[192kbps/mp3]<span class="check-tips">选填</span></label>
+            <div class="controls">
+                   {:hook('documentEditForm', array('name'=>'filename192','value'=>$info['filename192'],'buttonText'=>'上传歌曲','selectMultiple'=>'false'))}
+            </div>
+        </div>
+        
+          <div class="form-item">
+            <label class="item-label">音档[320kbps/mp3]<span class="check-tips">必填</span></label>
+            <div class="controls">
+                   {:hook('documentEditForm', array('name'=>'filename320','value'=>$info['filename320'],'buttonText'=>'上传歌曲','selectMultiple'=>'false'))}
+            </div>
+        </div>
+        
+        
+       
+        
+        
+        		<div class="form-item">
+			<label class="item-label">相关公告:</label>
+			<div class="controls">
+				<input type="hidden" id="noticeDataRelation" name="ggid" value="{$info.ggid}"
+				 class="input-xlarge required" />
+				<ol id="noticeSelectList"></ol>
+				<a id="relationButton" href="javascript:" class="btn">添加相关</a>
+				<script type="text/javascript">
+					var noticeSelect = [];
+					function noticeSelectAddOrDel(id,title){
+						var isExtents = false, index = 0;
+						for (var i=0; i<noticeSelect.length; i++){
+							if (noticeSelect[i][0]==id){
+								isExtents = true;
+								index = i;
+							}
+						}
+						if(isExtents){
+							noticeSelect.splice(index,1);
+						}else{
+							noticeSelect= [] ;
+							noticeSelect.push([id,title]);
+						}
+						noticeSelectRefresh();
+					}
+					function noticeSelectRefresh(){
+						$("#noticeDataRelation").val("");
+						$("#noticeSelectList").children().remove();
+						for (var i=0; i<noticeSelect.length; i++){
+							$("#noticeSelectList").append("<li>"+noticeSelect[i][1]+"&nbsp;&nbsp;<a href=\"javascript:\" onclick=\"noticeSelectAddOrDel('"+noticeSelect[i][0]+"','"+noticeSelect[i][1]+"');\">×</a></li>");
+							$("#noticeDataRelation").val(noticeSelect[i][0]);
+						}
+					}
+					$.getJSON("{:U('notice/findByIds')}",{ids:$("#noticeDataRelation").val()},function(data){
+						for (var i=0; i<data.length; i++){
+							noticeSelect.push([data[i]['id'],data[i]['title']]);
+						}
+						noticeSelectRefresh();
+					});
+					$("#relationButton").click(function(){
+						top.$.jBox.open("iframe:{:U('notice/selectlist')}", "添加相关",$(top).width()-220,$(top).height()-180,{
+							buttons:{"确定":true}, loaded:function(h){
+								$(".jbox-content", top.document).css("overflow-y","hidden");
+							}
+						});
+					});
+				</script>
+			</div>
+		</div>
+		
+		
+		
+		<div class="form-item">
+			<label class="item-label">添加广告:</label>
+			<div class="controls">
+				<input type="hidden" id="youpinDataRelation" name="ypid" value="{$info.ypid}"
+				 class="input-xlarge required" />
+				<ol id="youpinSelectList"></ol>
+				<a id="relationButton2" href="javascript:" class="btn">添加相关</a>
+				<script type="text/javascript">
+					var youpinSelect = [];
+					function youpinSelectAddOrDel(id,title){
+						var isExtents = false, index = 0;
+						for (var i=0; i<youpinSelect.length; i++){
+							if (youpinSelect[i][0]==id){
+								isExtents = true;
+								index = i;
+							}
+						}
+						if(isExtents){
+							youpinSelect.splice(index,1);
+						}else{
+							youpinSelect= [] ;
+							youpinSelect.push([id,title]);
+						}
+						youpinSelectRefresh();
+					}
+					function youpinSelectRefresh(){
+						$("#youpinDataRelation").val("");
+						$("#youpinSelectList").children().remove();
+						for (var i=0; i<youpinSelect.length; i++){
+							$("#youpinSelectList").append("<li>"+youpinSelect[i][1]+"&nbsp;&nbsp;<a href=\"javascript:\" onclick=\"youpinSelectAddOrDel('"+youpinSelect[i][0]+"','"+youpinSelect[i][1]+"');\">×</a></li>");
+							$("#youpinDataRelation").val(youpinSelect[i][0]);
+						}
+					}
+					$.getJSON("{:U('Youpin/findByIds')}",{ids:$("#youpinDataRelation").val()},function(data){
+						for (var i=0; i<data.length; i++){
+							youpinSelect.push([data[i]['id'],data[i]['title']]);
+						}
+						youpinSelectRefresh();
+					});
+					$("#relationButton2").click(function(){
+						top.$.jBox.open("iframe:{:U('youpin/selectlist')}", "添加相关",$(top).width()-220,$(top).height()-180,{
+							buttons:{"确定":true}, loaded:function(h){
+								$(".jbox-content", top.document).css("overflow-y","hidden");
+							}
+						});
+					});
+				</script>
+			</div>
+		</div>
+        
+        
+      <div class="form-item">
+		<label class="item-label">状态<span class="check-tips"></span></label>
+		<div class="controls">
+		
+			<volist name=":parse_dict_attr('oc_delflag')" id="vo"> 
+			<label class="radio"><input
+				type="radio" name="del_flag" value="{$vo.value}"
+			<eq name="info.del_flag" value="$vo.value"> checked</eq>> {$vo.label} </label></volist>
+		
+		</div>
+	</div>
+	
+	<div class="form-item">
+		<label class="item-label">审核意见<span class="check-tips"></span></label>
+		<div class="controls">
+	
+			<textarea  cols="54" class="input-xxlarge"  style="border: 1px solid #dedede; padding:4px"   rows="4"  name="reason">{$info['reason']}</textarea>		
+      
+		</div>
+	</div>
+      	
+        
+        
+        
+        
+        <div class="form-item">
+            <input type="hidden" name="id" value="{$info.id|default=''}">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定
+            </button>
+            <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+        </div>
+    </form>
+</block>
+<block name="script">
+    <script type="text/javascript" charset="utf-8">
+        //导航高亮
+         //导航高亮
+        highlight_subnav("{:U('index')}");
+    </script>
+</block>

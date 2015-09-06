@@ -1,0 +1,150 @@
+<extend name="Public/base" />
+<block name="script">
+	<script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+
+	<link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+<php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+<link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+
+	<script type="text/javascript">
+	
+	
+	
+    //导航高亮
+    highlight_subnav('{:U('Stats/adview')}');
+    
+    $('#time-start').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:"zh-CN",
+        todayBtn: true,
+	    minView:2,
+	    autoclose:true
+    });
+
+    $('#time-end').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:"zh-CN",
+        todayBtn: true,
+	    minView:2,
+	    autoclose:true
+    });
+	</script>
+</block>
+
+
+<block name="body">
+
+
+	<script type="text/javascript">
+	
+	  $(function(){
+		
+	
+		var orderBy = $("#orderBy").val().split(" ");
+
+		$("#treeTable th.sort").each(function(){
+			if ($(this).hasClass(orderBy[0])){
+				orderBy[1] = orderBy[1]&&orderBy[1].toUpperCase()=="DESC"?"down":"up";
+				$(this).html($(this).html()+" <i class=\"icon icon-arrow-"+orderBy[1]+"\"></i>");
+			}
+		});
+		$("#treeTable th.sort").click(function(){
+			var order = $(this).attr("class").split(" ");
+			var sort = $("#orderBy").val().split(" ");
+			for(var i=0; i<order.length; i++){
+				if (order[i] == "sort"){order = order[i+1]; break;}
+			}
+			if (order == sort[0]){
+				sort = (sort[1]&&sort[1].toUpperCase()=="DESC"?"ASC":"DESC");
+				$("#orderBy").val(order+" DESC"!=order+" "+sort?"":order+" "+sort);
+			}else{
+				$("#orderBy").val(order+" ASC");
+			}
+			page();
+		});
+		
+		function page(n,s){
+			$("#pageNo").val(n);
+			$("#pageSize").val(s);
+			$("#searchForm").submit();
+        	return false;
+        }
+		
+		
+		
+	});
+	</script>
+
+	<!-- 标题栏 -->
+	<div class="main-title">
+		<h2>广告浏览量</h2>
+	</div>
+	<div class="cf">
+		<form id="searchForm"
+		action="{:U('adview')}" method="post">
+
+        <!-- 高级搜索 -->
+		<div class="">
+				<input id="orderBy" name="orderBy" type="hidden"
+			value="{:I('orderBy')}" />
+			
+			<label>广告ID：</label>
+                		<input type="text" name="id" class="text input-2x" value="{:I('id')}" placeholder=""/>
+                		&nbsp;&nbsp;
+                		<label>标题：</label>
+                		<input type="text" name="title" class="text input-2x" value="{:I('title')}" placeholder=""/>
+                		&nbsp;&nbsp;
+                		
+			
+                		<label>发布时间：</label>            
+                		<input type="text" id="time-start" name="time_start" class="text input-2x" value="{:I('time_start')}" placeholder="起始时间" /> -
+                		<input type="text" id="time-end" name="time_end" class="text input-2x" value="{:I('time_end')}" placeholder="结束时间" />
+                		&nbsp;&nbsp;
+                	
+                		
+                	
+			<!--  
+				<input type="text" name="nickname" class="search-input" value="{:I('nickname')}" placeholder="请输入用户昵称或者ID"/>
+				<a class="" href="javascript:;" id="search" url="{:U('index')}"><i class="btn-search"></i></a> -->
+				
+				<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();" />
+			
+		</div>
+		
+		</form>
+    </div>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+	<table id="treeTable" class="table table-striped table-bordered table-condensed">
+    <thead>
+        <tr>
+		<th class="sort id">ID</th>
+		<th class="sort title">标题</th>
+        <th class="sort create_time">发布日期</th>
+		<th class="sort hits">浏览量</th>
+		
+		</tr>
+    </thead>
+    <tbody>
+		<notempty name="_list">
+		<volist name="_list" id="vo">
+		<tr>
+			<td>{$vo.id} </td>	
+			<td>{$vo.title}</td>
+			<td>{$vo['create_time']|time_format}</td>
+			<td>{$vo.hits}</td>
+		</tr>
+		</volist>
+		<else/>
+		<td colspan="4" class="text-center"> aOh! 暂时还没有内容! </td>
+		</notempty>
+	</tbody>
+    </table>
+	</div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
